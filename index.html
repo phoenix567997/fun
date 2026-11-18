@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DK</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Arial Black', sans-serif;
+    }
+
+    /* ── LOADING SCREEN ── */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #111;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    #loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-title {
+      font-size: 2.5rem;
+      font-weight: 900;
+      letter-spacing: 4px;
+      margin-bottom: 40px;
+      background: linear-gradient(90deg, #e52222, #f5a623, #f8e71c, #7ed321, #4a90e2, #9013fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: rainbow-shift 1.5s linear infinite;
+      background-size: 200% auto;
+    }
+
+    @keyframes rainbow-shift {
+      0%   { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .bar-wrap {
+      width: 300px;
+      height: 22px;
+      background: #2a2a2a;
+      border-radius: 20px;
+      border: 2px solid #444;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(255,255,0,0.2);
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 20px;
+      background: linear-gradient(90deg, #e52222, #f5a623, #f8e71c, #7ed321, #4a90e2, #9013fe);
+      background-size: 200% 100%;
+      animation: bar-fill 2.5s ease-out forwards, bar-shine 0.6s linear infinite;
+    }
+
+    @keyframes bar-fill {
+      0%   { width: 0%; }
+      60%  { width: 85%; }
+      100% { width: 100%; }
+    }
+
+    @keyframes bar-shine {
+      0%   { background-position: 0% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .pct {
+      margin-top: 14px;
+      font-size: 1.1rem;
+      color: #aaa;
+      letter-spacing: 2px;
+    }
+
+    /* spinning banana */
+    .banana {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* ── MAIN CONTENT ── */
+    #content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    #content.visible { opacity: 1; }
+
+    #content img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 12px;
+      filter: drop-shadow(0 0 30px rgba(255,200,0,0.6));
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-15px); }
+    }
+
+    /* star-burst bg */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, #1a0a00 0%, #000 70%);
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="banana">🍌</div>
+    <div class="loader-title">LOADING…</div>
+    <div class="bar-wrap">
+      <div class="bar" id="bar"></div>
+    </div>
+    <div class="pct" id="pct">0%</div>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="content">
+    <img src="dk.jpg" alt="DK" />
+  </div>
+
+  <script>
+    const pctEl  = document.getElementById('pct');
+    const loader = document.getElementById('loader');
+    const content = document.getElementById('content');
+
+    let pct = 0;
+    const interval = setInterval(() => {
+      pct = Math.min(pct + Math.floor(Math.random() * 6) + 2, 100);
+      pctEl.textContent = pct + '%';
+      if (pct >= 100) {
+        clearInterval(interval);
+        setTimeout(() => {
+          loader.classList.add('hidden');
+          content.classList.add('visible');
+        }, 400);
+      }
+    }, 80);
+  </script>
+</body>
+</html>
